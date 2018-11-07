@@ -21,7 +21,8 @@ options(error=recover,warn = 2)
 
 #file di input: attenzione, non vi debbono essere file netCDF che non si vogliono convertire
 #I file di input hanno nome del tipo: nomeparametro_it.nc
-list.files(pattern="^.+_daily\\.nc$")->lista.file
+#I file standardizzati hanno estensione "_daily.s.nc"
+list.files(pattern="^.+_daily\\.s?.?nc$")->lista.file
 stopifnot(length(lista.file)!=0)
 purrr::walk(lista.file,~(print(sprintf("---->> FILE DA CONVERTIRE: %s",.))))
 
@@ -68,7 +69,7 @@ purrr::walk(lista.file,.f=function(ffile){
     }else if(VARIABILE=="sp"){
       dlname <- "surface_air_pressure"
       units<-"hPa"
-    }else if(VARIABILE=="pbl00" || VARIABILE=="pbl12"){
+    }else if(VARIABILE=="pbl00" || VARIABILE=="pbl12" || VARIABILE=="lnpbl00" || VARIABILE=="lnpbl12" ){
       dlname <- "Boundary layer height"
       units<-"m"
     }else if(VARIABILE=="u10"){
@@ -77,6 +78,12 @@ purrr::walk(lista.file,.f=function(ffile){
     }else if(VARIABILE=="v10"){
       dlname <- "10 metre V wind component"
       units<-"m s**-1"
+    }else if(VARIABILE=="wdir"){  
+      dlname <- "10 metre wind direction"
+      units<-"degrees"      
+    }else if(VARIABILE=="wspeed"){
+      dlname <- "10 metre wind speed"
+      units<-"m/s"      
     }else{
       stop(sprintf("%s: variabile non riconosciuta!",VARIABILE))
     }  
